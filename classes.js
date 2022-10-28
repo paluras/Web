@@ -21,8 +21,8 @@ class Sprite{
     draw(){
         c.drawImage(
             this.image,
-            //77 pixel to move the sprite sheet, idk why
-            this.frames.val * 77,
+            //71 pixel to move the sprite sheet, its the widthof one frame
+            this.frames.val * 71.03,
             0,
             this.image.width / this.frames.max ,
             this.image.height ,
@@ -31,7 +31,8 @@ class Sprite{
             this.image.width / this.frames.max ,
             this.image.height 
         )  
-            if(!this.moving)  return
+            if(!this.moving)  
+             return this.frames.val = 0
             if(this.frames.max > 1){
                 this.frames.elapsed++
             }

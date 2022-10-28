@@ -57,13 +57,16 @@ playerLeftImage.src = "./img/left.png"
 const playerdownImage = new Image();
 playerdownImage.src = "./img/left.png"
 
+const playerIdle = new Image();
+    playerIdle.src = "./img/Idle.png"
+
 
 
 
 const player =new Sprite({
     position : {
-        x: canvas.width / 2 - 616 / 2 / 2 ,
-        y: canvas.height / 2 - 110 / 2 
+        x: canvas.width / 2 - 578 / 2 / 2 ,
+        y: canvas.height / 2 - 98 / 2 
     },
     image: playerRightImage,
     frames: {
@@ -73,11 +76,18 @@ const player =new Sprite({
         up: playerUpImage,
         left: playerLeftImage,
         right: playerRightImage,
-        down: playerdownImage
+        down: playerdownImage,
+       
     }
 })
 
-
+const idle = new Sprite ({
+    position : {
+        x: offset.x,
+        y: offset.y
+    },
+    image: playerIdle
+})
 
 const background = new Sprite({
     position:{
@@ -130,6 +140,7 @@ foreground.draw()
     
 let moving =true
     player.moving = false
+    
 if(keys.w.pressed &&  lastKey === "w") {
     player.moving = true
     
