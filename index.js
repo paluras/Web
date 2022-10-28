@@ -5,9 +5,10 @@ const c = canvas.getContext('2d');
 
 
 canvas.width = 1024;
-canvas.height = 576;
+canvas.height = 768;
 
 //Colision calcultion
+///////// Here try to do the 8 pixels schema, change 50 to 100 in tiled
 const collisionMap = [];
 for(let i = 0; i < collision.length ; i += 50){
    collisionMap.push (collision.slice(i, 50 + i))
@@ -91,15 +92,15 @@ const idle = new Sprite ({
 
 const background = new Sprite({
     position:{
-        x:offset.x -50,
-        y:offset.y + 30
+        x:offset.x ,
+        y:offset.y 
     } ,
     image: image
 })
 const foreground = new Sprite({
     position:{
-        x:offset.x -50,
-        y:offset.y + 30
+        x:offset.x ,
+        y:offset.y 
     } ,
     image: foregroundimage
 })

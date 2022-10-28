@@ -21,7 +21,7 @@ class Sprite{
     draw(){
         c.drawImage(
             this.image,
-            //71 pixel to move the sprite sheet, its the widthof one frame
+            //71 pixel to move the sprite sheet, its the widthof one
             this.frames.val * 71.03,
             0,
             this.image.width / this.frames.max ,
@@ -46,13 +46,13 @@ class Sprite{
 
 class Boundary {
     // 88 since we multiply a tile by 5.5
-    static width = 88
-    static height = 88
+    static width = 88  +4
+    static height = 88 
     constructor({position}) {
         this.position = position
         //change Size of tiles colision
-        this.width = 55
-        this.height = 55
+        this.width = 25
+        this.height = 25
     }
 draw(){
     c.fillStyle = "rgba(255, 0, 0, 0)"
