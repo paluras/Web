@@ -4,16 +4,21 @@ const c = canvas.getContext('2d');
 
 
 
+
 canvas.width = 1024;
 canvas.height = 768;
 
 //Colision calcultion
-///////// Here try to do the 8 pixels schema, change 50 to 100 in tiled
+/////////(nvm) Here try to do the 8 pixels schema, change 50 to 100 in tiled
 const collisionMap = [];
 for(let i = 0; i < collision.length ; i += 50){
    collisionMap.push (collision.slice(i, 50 + i))
 }
 
+const battleZonesMap = [];
+for(let i = 0; i < battlezoneData.length ; i += 50){
+   battleZonesMap.push (battlezoneData.slice(i, 50 + i))
+}
 
 
 //Did not understan, loop each row ,
@@ -28,6 +33,23 @@ collisionMap.forEach((row, i ) => {
         if(symbol === 4097 )
 
         boundaries.push(
+            new Boundary({
+                position: {
+            x:j * Boundary.width + offset.x,
+            y:i * Boundary.height + offset.y
+        }
+    })
+    )
+})
+})
+
+const battleZones = []
+
+battleZonesMap.forEach((row, i ) => {
+    row.forEach((symbol, j) => {
+        if(symbol === 4097 )
+
+        battleZones.push(
             new Boundary({
                 position: {
             x:j * Boundary.width + offset.x,
@@ -120,7 +142,7 @@ const keys = {
     },
 }
 
-const movables =[background,...boundaries, foreground]
+const movables =[background,...boundaries, foreground,...battleZones]
 
 function rectangularCollsion({rectangle1, recttangle2}){
     return (
@@ -129,23 +151,100 @@ function rectangularCollsion({rectangle1, recttangle2}){
         rectangle1.position.y <= recttangle2.position.y + recttangle2.height&&
         rectangle1.position.y + rectangle1.height >= recttangle2.position.y)
 }
+
+const battle ={
+    initiated:false
+}
 function animate(){
- window.requestAnimationFrame(animate)
+ const animationId = window.requestAnimationFrame(animate)
    
  background.draw()
  boundaries.forEach((boundary) => {
     boundary.draw()
  })
-player.draw();
+
+ battleZones.forEach(battlezone => {
+    battlezone.draw()
+ })
+
+
+
+ player.draw();
 foreground.draw()
-    
 let moving =true
     player.moving = false
+
+if(battle.initiated)return
+
+///math to calculate if player is acctualy in the battle zone
+if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+    for (let i = 0; i < battleZones.length; i++) {
+      const battleZone = battleZones[i]
+      const overlappingArea =
+        (Math.min(
+          player.position.x + player.width,
+          battleZone.position.x + battleZone.width
+        ) -
+          Math.max(player.position.x, battleZone.position.x)) *
+        (Math.min(
+          player.position.y + player.height,
+          battleZone.position.y + battleZone.height
+        ) -
+          Math.max(player.position.y, battleZone.position.y))
+      if (
+        rectangularCollsion({
+          rectangle1: player,
+          recttangle2: battleZone
+        }) &&
+        overlappingArea > (player.width * player.height) / 2 &&
+        Math.random() < 0.01
+)
+{
+   console.log("battle")
+//deactive curent anim loop
+   window.cancelAnimationFrame(animationId)
+
+
+   battle.initiated = true
+   gsap.to('#overlappingDiv',{
+    opacity: 1,
+    repeat: 3,
+    yoyo:true,
+    duration: 0.4,
+    onComplete(){
+        gsap.to("#overlappingDiv" , {
+            opacity:1,
+            duration: 0.4,
+            onComplete(){
+                animateBattle()
+                    gsap.to("#overlappingDiv" , {
+                        opacity:0,
+                        duration: 0.4,
+                        
+                })
+            }
+        })
+
+/// new animation
+animateBattle()
+
+
+    }
+})
+    break
+      }
+    } 
+}
+    
+
     
 if(keys.w.pressed &&  lastKey === "w") {
     player.moving = true
+    player.image = player.sprites.up
+
     
-        for (let i = 0 ; i <boundaries.length; i++){
+    
+    for (let i = 0 ; i <boundaries.length; i++){
             const boundary = boundaries[i]
             if (
                 rectangularCollsion({
@@ -161,7 +260,7 @@ if(keys.w.pressed &&  lastKey === "w") {
         moving = false
         break
      }
-    }   
+    } 
         if (moving) 
         movables.forEach(moveable => {moveable.position.y +=3})
     }
@@ -288,3 +387,38 @@ window.addEventListener('keyup' , ( e ) => {
     }
 })
 
+
+const battleBackgroundImage = new Image()
+    battleBackgroundImage.src = './img/battlezone.png'
+    const battleBackground = new Sprite({
+        position:{
+            x:0,
+            y:0
+        },
+        image: battleBackgroundImage
+    })
+ const monster1Image = new Image()
+ monster1Image.src = './img/monster1.png'
+    const seal1 = new Sprite({
+        position:{
+            x:140,
+            y:300
+        },
+        image : monster1Image
+    })
+    const monster2Image = new Image()
+ monster2Image.src = './img/monster2.png'
+    const seal2 = new Sprite({
+        position:{
+            x:750,
+            y:300
+        },
+        image : monster2Image
+    })
+
+function animateBattle(){
+    window.requestAnimationFrame(animateBattle)
+    battleBackground.draw()
+    seal1.draw()
+    seal2.draw()
+}

@@ -46,16 +46,16 @@ class Sprite{
 
 class Boundary {
     // 88 since we multiply a tile by 5.5
-    static width = 88  +4
-    static height = 88 
+    static width = 88 +3 
+    static height = 88  - 2
     constructor({position}) {
         this.position = position
         //change Size of tiles colision
-        this.width = 25
-        this.height = 25
+        this.width = 88
+        this.height = 88
     }
 draw(){
-    c.fillStyle = "rgba(255, 0, 0, 0)"
+    c.fillStyle = "rgba(255, 0, 0, 0.3)"
     c.fillRect(this.position.x , this.position.y, this.width, this.height)
 }
 }
