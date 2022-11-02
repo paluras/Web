@@ -227,6 +227,19 @@ if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
 
 /// new animation
 animateBattle()
+// event listenr for buttons // attack
+document.querySelectorAll('button').forEach(button =>{
+    button.addEventListener("click", (e) => { 
+        const selectAttack = attacks[e.currentTarget.innerHTML]
+       seal1.attack({ 
+        attack: selectAttack,
+       recipient: seal2
+  })
+    })
+})
+addEventListener('click', () => {
+    console.log("clicked")
+})
 
 
     }
@@ -413,7 +426,9 @@ const battleBackgroundImage = new Image()
             x:750,
             y:300
         },
-        image : monster2Image
+        image : monster2Image,
+        isEnemy : true
+
     })
 
 function animateBattle(){
